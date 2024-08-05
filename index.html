@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Dashboard</h1>
+        <div class="menu">
+            <button id="generatorBtn">QR Generator</button>
+            <button id="scannerBtn">QR Scanner</button>
+        </div>
+        <div id="generator" class="content hidden">
+            <h2>QR Generator</h2>
+            <input type="text" id="text" placeholder="Enter text">
+            <button id="generateBtn">Generate QR Code</button>
+            <canvas id="qrcode"></canvas>
+        </div>
+        <div id="scanner" class="content hidden">
+            <h2>QR Scanner</h2>
+            <video id="video" width="300" height="300"></video>
+            <button id="scanBtn">Start Scan</button>
+            <div id="result"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
