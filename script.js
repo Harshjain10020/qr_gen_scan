@@ -5,10 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const scanner = document.getElementById('scanner');
     const generateBtn = document.getElementById('generateBtn');
     const scanBtn = document.getElementById('scanBtn');
-    const qrcode = document.getElementById('qrcode');
+    const downloadGeneratorDataBtn = document.getElementById('downloadGeneratorDataBtn');
+    const downloadScannerDataBtn = document.getElementById('downloadScannerDataBtn');
+    const qrcodeContainer = document.getElementById('qrcode');
     const text = document.getElementById('text');
     const video = document.getElementById('video');
     const result = document.getElementById('result');
+    let qrDataList = [];
+    let scannedDataList = [];
 
     generatorBtn.addEventListener('click', () => {
         generator.classList.remove('hidden');
@@ -21,10 +25,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     generateBtn.addEventListener('click', () => {
-        qrcode.innerHTML = '';
+        qrcodeContainer.innerHTML = '';
         const qrText = text.value;
         if (qrText) {
-            new QRCode(qrcode, qrText);
+            new QRCode(qrcodeContainer, {
+                text: qrText,
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            qrDataList.push(qrText);
+        }
+    });
+
+    downloadGeneratorDataBtn.addEventListener('click', () => {
+        if (qrDataList.length > 0) {
+            const worksheet = XLSX.utils.aoa_to_sheet([['QR Data'], ...qrDataList.map(data => [data])]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "QR Data");
+            XLSX.writeFile(workbook, 'Generated_QR_Data.xlsx');
         }
     });
 
@@ -32,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         result.innerHTML = '';
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         video.srcObject = stream;
-        video.setAttribute('playsinline', true);
+        video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
         video.play();
         requestAnimationFrame(tick);
     });
@@ -50,8 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.innerHTML = `QR Code Data: ${code.data}`;
                 video.pause();
                 video.srcObject.getTracks().forEach(track => track.stop());
+                if (!scannedDataList.includes(code.data)) {
+                    scannedDataList.push(code.data);
+                }
             }
         }
         requestAnimationFrame(tick);
     }
+
+    downloadScannerDataBtn.addEventListener('click', () => {
+        if (scannedDataList.length > 0) {
+            const worksheet = XLSX.utils.aoa_to_sheet([['Scanned QR Data'], ...scannedDataList.map(data => [data])]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Scanned QR Data");
+            XLSX.writeFile(workbook, 'Scanned_QR_Data.xlsx');
+        }
+    });
 });
