@@ -17,17 +17,20 @@
             <h2>QR Generator</h2>
             <input type="text" id="text" placeholder="Enter text">
             <button id="generateBtn">Generate QR Code</button>
+            <button id="downloadGeneratorDataBtn">Download Generated Data</button>
             <div id="qrcode"></div>
         </div>
         <div id="scanner" class="content hidden">
             <h2>QR Scanner</h2>
             <video id="video" width="300" height="300"></video>
             <button id="scanBtn">Start Scan</button>
+            <button id="downloadScannerDataBtn">Download Scanned Data</button>
             <div id="result"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
